@@ -62,6 +62,7 @@ def blackjack_update(memory, card):
     return memory
 
 def betting_round(player):
+    # Make bets
     bet = qprompt.ask_int("Enter a bet amount less than your bank value of " + str(player.memory["bank"]), valid=lambda x: x <= player.memory["bank"])
     player.memory["bank"] -= bet
     player.memory["bet"] = bet
@@ -78,6 +79,7 @@ def decision_round(player):
     s += "\n"
     qprompt.info(s)
 
+    # Allow user to make a decision in the game
     if player.memory["cards_val"] >= 21:
         options = ["Stay", "Exit"]
         item = qprompt.enum_menu(options).show(header="OPTIONS:")
@@ -96,6 +98,7 @@ def decision_round(player):
         return options[int(item)-1]
 
 def payout_round(deck, player):
+    # decide how much the player should be payed out based on a random dealer draw
     qprompt.clear()
     payout = 0
     dealer_memory = {
@@ -149,6 +152,7 @@ def payout_round(deck, player):
 d = Deck()
 player = Player(ids="You", update=blackjack_update, memory=blackjack_memory)
 
+# main loop
 while (not EXIT_FLAG):
     qprompt.clear()
     betting_round(player)
