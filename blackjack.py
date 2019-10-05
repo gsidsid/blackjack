@@ -26,6 +26,7 @@ blackjack_memory = {
     "vals": []
 }
 
+
 def card_val(memory, card):
     v = 0
     if str.isdigit(card.number):
@@ -101,23 +102,37 @@ def decision_round(player):
 
 def payout_round(deck, player):
     payout = 0
-
+    dealer_memory = {
+        "bank": DEFAULT_BANK,
+        "bet": 0,
+        "no_cards": 0,
+        "cards": [],
+        "cards_val": 0,
+        "status": "NORMAL",
+        "vals": []
+    }
     # the dealer's bank doesn't matter, we can keep reinstantiating
-    dealer = Player(ids="Dealer", update=blackjack_update, memory=blackjack_memory)
+    dealer = Player(ids="Dealer", update=blackjack_update, memory=dealer_memory)
     dealer.receive(deck.draw())
     dealer.receive(deck.draw())
-    while dealer.memory["cards_val"] <= 16:
-        dealer.receive(deck.draw())
 
     for value in player.memory["vals"]:
-        if value == 21 and player.memory["no_cards"] == 2 and (value > dealer.memory["cards_val"] or dealer.memory["cards_val"] > 21):
-            payout += player.memory["bet"]*2.5
-        elif dealer.memory["cards_val"] < value:
-            payout += player.memory["bet"]*2
-        elif dealer.memory["cards_val"] > value and dealer.memory["cards_val"] <= 21:
+        if dealer.memory["cards_val"] > 21:
+            if value == 21:
+                payout += player.memory["bet"]*2.5
+            elif value < 21:
+                payout += player.memory["bet"]*2
+        elif dealer.memory["cards_val"] == 21:
             payout += 0
-        elif dealer.memory["cards_val"] == value:
-            payout += player.memory["bet"]
+        elif value <= 21:
+            if value > dealer.memory["cards_val"]:
+                payout += player.memory["bet"]*2
+                if value == 21:
+                    payout += player.memory["bet"]*0.5
+            elif value == dealer.memory["cards_val"]:
+                payout += player.memory["bet"]
+            else:
+                payout += 0
 
     qprompt.info("DEALER GOT: " + str(dealer.memory["cards_val"]))
     qprompt.info("PAYOUT: " + str(payout))
@@ -127,6 +142,7 @@ def payout_round(deck, player):
     player.memory["cards_val"] = 0
     player.memory["cards"] = []
     player.memory["no_cards"] = 0
+    player.memory["vals"] = []
 
 
 d = Deck()
@@ -139,7 +155,7 @@ while (not EXIT_FLAG):
     player.receive(d.draw())
     player.receive(d.draw())
 
-    while (not STAY_FLAG):
+    while (not STAY_FLAG ) and (not EXIT_FLAG):
 
         action = decision_round(player)
 
@@ -154,7 +170,7 @@ while (not EXIT_FLAG):
             SPLIT_FLAG = True
             player.memory["cards"] = [player.memory["cards"][0]]
             player.memory["no_cards"] = 1
-            player.memory["cards_val"] = card_val(memory, player.memory["cards"][0])
+            player.memory["cards_val"] = card_val(player.memory, player.memory["cards"][0])
             player.memory["bet"] = player.memory["bet"]/2
             player.memory["status"] = "SPLIT"
         elif action == "Stay":
@@ -164,7 +180,7 @@ while (not EXIT_FLAG):
                 STAY_FLAG = False
                 player.memory["cards"] = [SPLIT_CARD]
                 player.memory["no_cards"] = 1
-                player.memory["cards_val"] = card_val(memory, player.memory["cards"][0])
+                player.memory["cards_val"] = card_val(player.memory, player.memory["cards"][0])
                 player.memory["bet"] = player.memory["bet"]/2
                 player.memory["status"] = "NORMAL"
                 SPLIT_FLAG = False
