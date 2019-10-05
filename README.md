@@ -9,7 +9,7 @@ Standard blackjack rules, with functionality for doubling down, splitting, and p
 ### Design:
 
 #### Process:
-Decided to use Python for its simplicity in implementation and prototyping speed. No formal test structure is used, albeit testing was conducted iteratively in-script as the codebase was built out. 
+I decided to use Python for its simplicity in implementation and prototyping speed. No formal test structure is used, albeit testing was conducted iteratively in-script as the codebase was built out. 
 
 Before starting development of the blackjack ruleset/game code, I wrote out some requirements and raw output in `design.txt` to visualize some scenarios for how the game could look and operate. This helped clarify what features needed to be implemented and what cases needed to be covered, at least on a high level.
 
