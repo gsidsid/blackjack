@@ -62,21 +62,18 @@ def blackjack_update(memory, card):
     return memory
 
 def betting_round(player):
-    qprompt.hrule()
-    bet = qprompt.ask_int("Enter a bet amount less than your bank value of " + str(player.memory["bank"]), valid=lambda x: x < player.memory["bank"])
+    bet = qprompt.ask_int("Enter a bet amount less than your bank value of " + str(player.memory["bank"]), valid=lambda x: x <= player.memory["bank"])
     player.memory["bank"] -= bet
     player.memory["bet"] = bet
     qprompt.info("Betted " + str(bet))
     qprompt.pause()
-    qprompt.hrule()
-    print("\n\n")
+    qprompt.clear()
 
 def decision_round(player):
-    qprompt.hrule()
     s = "Your hand: "
     for card in player.memory["cards"]:
         s += str(card) + " "
-    s += "\n"
+    s += " |  "
     s += "Hand value: " + str(player.memory["cards_val"])
     s += "\n"
     qprompt.info(s)
@@ -86,7 +83,6 @@ def decision_round(player):
         item = qprompt.enum_menu(options).show(header="OPTIONS:")
         print("Selected " + options[int(item)-1] + ".")
         qprompt.hrule()
-        print("\n\n")
         return options[int(item)-1]
     else:
         options = ["Hit","Stay","Exit"]
@@ -96,11 +92,11 @@ def decision_round(player):
                 options.append("Split")
         item = qprompt.enum_menu(options).show(header="OPTIONS:")
         print("Selected " + options[int(item)-1] + ".")
-        qprompt.hrule()
-        print("\n\n")
+        qprompt.clear()
         return options[int(item)-1]
 
 def payout_round(deck, player):
+    qprompt.clear()
     payout = 0
     dealer_memory = {
         "bank": DEFAULT_BANK,
@@ -115,6 +111,9 @@ def payout_round(deck, player):
     dealer = Player(ids="Dealer", update=blackjack_update, memory=dealer_memory)
     dealer.receive(deck.draw())
     dealer.receive(deck.draw())
+
+    while dealer.memory["cards_val"] <= 16:
+        dealer.receive(d.draw())
 
     for value in player.memory["vals"]:
         if dealer.memory["cards_val"] > 21:
@@ -143,12 +142,15 @@ def payout_round(deck, player):
     player.memory["cards"] = []
     player.memory["no_cards"] = 0
     player.memory["vals"] = []
+    qprompt.pause()
+    qprompt.clear()
 
 
 d = Deck()
 player = Player(ids="You", update=blackjack_update, memory=blackjack_memory)
 
 while (not EXIT_FLAG):
+    qprompt.clear()
     betting_round(player)
 
     qprompt.info("DEALING CARDS...")
