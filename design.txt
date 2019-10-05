@@ -1,0 +1,141 @@
+Requirements:
+
+current money/bet mechanic
+hit/stay mechanic w/ input mechanism 
+optionality for split cards, double down, Ace split values
+feedback on total value, as well as 21 condition, blackjack, and bust
+dealer bot
+results handler
+exit game option
+
+
+
+Format:
+
+[CURRENT CARDS]:[WHAT THIS MEANS]
+[OPTIONS]
+[SPECIAL OPTIONS]
+
+
+(Writing out what this would look like)
+
+Betting Round:
+
+MAKE BETS!
+- - - - -
+Enter a bet amount and press enter to begin:
+123
+
+
+Example Bust:
+
+7/c 10/d : {Bank: 1000, Bet: 200, Cards: 17, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+7/c 10/d 5/h : {Bank: 1000, Bet: 200, Cards: 22, Status: "Bust"}
+- - - - -
+OPTIONS:
+[S] : Stay
+[E] : Exit
+
+
+
+Example Win:
+
+7/c 10/d : {Bank: 1000, Bet: 200, Cards: 17, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+7/c 10/d 4/h : {Bank: 1000, Bet: 200, Cards: 21, Status: "21"}
+- - - - -
+OPTIONS:
+[S] : Stay
+[E] : Exit
+
+
+
+Example Blackjack:
+
+J/c A/d : {Bank: 1000, Bet: 200, Cards: 21, Status: "Blackjack"}
+- - - - -
+OPTIONS:
+[S] : Stay
+[E] : Exit
+
+
+
+Example Split:
+
+8/c 8/d : {Bank: 1000, Bet: 200, Cards: 16, Status: "Normal"}
+- - - - -
+OPTIONS:
+[P] : Split
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+8/d : {Bank: 1000, Bet: 100, Cards: 8, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+8/d 10/d : {Bank: 1000, Bet: 100, Cards: 18, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+8/c : {Bank: 1000, Bet: 100, Cards: 8, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+8/c 2/c : {Bank: 1000, Bet: 100, Cards: 8, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+8/c 2/c 10/s: {Bank: 1000, Bet: 100, Cards: 20, Status: "Normal"}
+- - - - -
+OPTIONS:
+[H] : Hit
+[S] : Stay
+[D] : Double down
+[E] : Exit
+
+
+
+DEALER GOT: 21
+YOU LOST!
+- - - - -
+PAYOUT: -200
+
+
+
+MAKE BETS!
+- - - - -
+Enter a bet amount and press enter to begin:
+123
+
+(repeat)
